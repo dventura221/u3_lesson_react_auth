@@ -1,7 +1,11 @@
 import { useState } from 'react'
+import { SignInUser } from '../services/Auth'
+import { useNavigate } from 'react-router-dom'
 
-const SignIn = () => {
-  
+const SignIn = ({ setUser, toggleAuthenticated }) => {
+  // props was destructured above
+  let navigate = useNavigate()
+
   const [formValues, setFormValues] = useState({ email: '', password: '' })
 
   const handleChange = (e) => {
@@ -10,7 +14,11 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
+    const payload = await SignInUser(formValues)
+    setFormValues({ email: '', password: '' })
+    setUser(payload) // if you did not destructure, you'd use props.setUser(payload)
+    toggleAuthenticated(true) // same, if you used props, you'd use props.toggleAuthenticated(true)
+    navigate('/feed')
   }
 
   return (
